@@ -19,3 +19,7 @@ npm-debug.log*
 *.log
 *.tmp
 _dist/
+
+# 渲染探针临时产物
+_probe_*.html
+_pvz_probe.js
