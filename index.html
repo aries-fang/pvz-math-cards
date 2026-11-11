@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>植物大战僵尸 · 数学抽卡训练营</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>
+/* 窄屏自动进入手机版；桌面版本身完整保留，?desktop=1 可强制留在电脑版 */
+(function(){
+  try{
+    if(location.search.indexOf('desktop=1')!==-1) return;
+    if(sessionStorage.getItem('pvz-desktop')==='1') return;
+    var mobileUA=/Android|iPhone|iPod|Windows Phone|Mobile/i.test(navigator.userAgent);
+    /* 保留 ?desktop=1 之外的查询参数，避免带参访问时跳转后丢失 */
+    if(window.innerWidth<=720 || (mobileUA && window.innerWidth<=900)) location.replace('m.html' + location.search);
+  }catch(e){}
+})();
+document.addEventListener('DOMContentLoaded', function(){
+  var a = document.getElementById('mobile-link');
+  if (a) a.href = 'm.html' + location.search;
+});
+</script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <svg class="brand-icon" viewBox="0 0 52 52" aria-hidden="true">
+      <g fill="#FFD84D">
+        <ellipse cx="26" cy="9" rx="5.5" ry="10"/><ellipse cx="26" cy="43" rx="5.5" ry="10"/>
+        <ellipse cx="9" cy="26" rx="10" ry="5.5"/><ellipse cx="43" cy="26" rx="10" ry="5.5"/>
+        <ellipse cx="14" cy="14" rx="5.5" ry="9" transform="rotate(-45 14 14)"/>
+        <ellipse cx="38" cy="38" rx="5.5" ry="9" transform="rotate(-45 38 38)"/>
+        <ellipse cx="38" cy="14" rx="5.5" ry="9" transform="rotate(45 38 14)"/>
+        <ellipse cx="14" cy="38" rx="5.5" ry="9" transform="rotate(45 14 38)"/>
+      </g>
+      <circle cx="26" cy="26" r="12" fill="#8C5A1B"/><circle cx="26" cy="26" r="9" fill="#A8702A"/>
+      <circle cx="22" cy="23" r="2" fill="#3F2A12"/><circle cx="30" cy="23" r="2" fill="#3F2A12"/>
+      <path d="M22 31 Q26 35 30 31" stroke="#3F2A12" stroke-width="2" stroke-linecap="round" fill="none"/>
+    </svg>
+    <div class="brand-text">
+      <h1>数学抽卡训练营</h1>
+      <p>二年级应用题 · 口诀闯关　|　植物大战僵尸</p>
+    </div>
+  </div>
+  <div class="stats">
+    <span class="stat">☀ 阳光 <b id="stat-sun">0</b></span>
+    <span class="stat">🔥 连对 <b id="stat-streak">0</b></span>
+    <span class="stat">🎯 第 <b id="stat-round">1</b>/10 关</span>
+  </div>
+  <div class="actions">
+    <button class="ghost-btn" id="btn-review">📕 错题库 <span class="badge" id="review-badge">0</span></button>
+    <a class="ghost-btn" id="mobile-link" href="m.html" style="text-decoration:none;display:inline-flex;align-items:center">📱 手机版</a>
+    <button class="icon-btn" id="btn-sound" title="开关声音">🔊</button>
+  </div>
+</header>
+
+<main class="layout" id="main-layout">
+
+  <!-- 左：常驻口诀墙 -->
+  <aside class="wall card" id="wall">
+    <h2>🧠 口诀记忆墙</h2>
+    <p class="sub">抽卡前，先大声读一遍！</p>
+
+    <div class="rule-card rule-add">
+      <h3>＋ 加法 · 求总数</h3>
+      <p>部分 + 部分 = 总数<br>已知两部分，求总数<br><b>看已知：两堆各多少都给了</b></p>
+    </div>
+    <div class="rule-card rule-sub">
+      <h3>－ 减法 · 求另一部分</h3>
+      <p>总数 − 部分 = 剩下的部分<br>已知总数和一部分<br><b>看已知：总数和一部分都给了</b></p>
+    </div>
+    <div class="rule-card rule-mul">
+      <h3>× 乘法 · 求总数</h3>
+      <p>每份个数 × 份数 = 总数<br>已知每份个数和份数<br><b>看已知：每份几个、共几份</b></p>
+    </div>
+    <div class="rule-card rule-div">
+      <h3>÷ 除法 · 求份数或每份</h3>
+      <p>总数 ÷ 每份个数 = 份数<br>总数 ÷ 份数 = 每份个数<br><b>看已知：总数已给，要分开</b></p>
+    </div>
+    <div class="wall-tip">💡 小秘诀：口诀读出声，记得更牢！</div>
+  </aside>
+
+  <!-- 中：抽卡台 / 答题 / 错题库 -->
+  <section class="center">
+
+    <div id="view-home" class="view">
+      <div class="stage card">
+        <div class="stage-head">
+          <span id="home-level">第 1 / 10 关 · 还差 12 ☀️</span>
+          <span id="home-remain">卡池 600 张</span>
+        </div>
+        <img class="stage-art" src="assets/plants.png" alt="草坪上的植物和僵尸插画">
+        <div class="deck" aria-hidden="true">
+          <div class="card-back back-1"></div>
+          <div class="card-back back-2"></div>
+          <div class="card-back back-3"><span class="qmark">？</span><span class="back-label">数学卡</span></div>
+        </div>
+        <div class="pool-row" id="pool-row">
+          <label class="pool-field">运算
+            <select id="op-pool" aria-label="选择运算卡池">
+              <option value="all">全部题型</option>
+              <option value="single">单一运算</option>
+              <option value="add">加法专项</option>
+              <option value="sub">减法专项</option>
+              <option value="mul">乘法专项</option>
+              <option value="div">除法专项</option>
+              <option value="mix">两步混合</option>
+            </select>
+          </label>
+          <label class="pool-field">场景
+            <select id="theme-pool" aria-label="选择场景卡池">
+              <option value="all">全部场景</option>
+              <option value="lawn">草坪</option>
+              <option value="zombie">僵尸</option>
+              <option value="sun">阳光</option>
+              <option value="pool">泳池</option>
+              <option value="night">夜晚</option>
+              <option value="roof">屋顶</option>
+              <option value="tool">道具</option>
+              <option value="card">卡包</option>
+            </select>
+          </label>
+        </div>
+        <div class="review-tip" id="home-review-tip"></div>
+        <button class="draw-btn" id="btn-draw">🎴 抽一张卡！</button>
+        <p class="stage-hint">🧭 先想清「已知什么、求什么」，别只盯一个词</p>
+      </div>
+    </div>
+
+    <div id="view-quiz" class="view hidden"><div id="quiz-content"></div></div>
+    <div id="view-review" class="view hidden"><div id="review-content"></div></div>
+
+  </section>
+
+  <!-- 右：进度 / 徽章 / 家长提示 -->
+  <aside class="side card" id="side">
+    <h2>🏆 今日闯关</h2>
+    <div class="progress-card">
+      <h3>第 <span id="side-round">1</span> / 10 关</h3>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <p id="progress-note">累计 0 / 12 ☀️ · 本关还需 12 ☀️</p>
+      <p>已答对 <b id="stat-correct">0</b> 题 · 连对 <b id="stat-streak-side">0</b> 题</p>
+    </div>
+    <h3 class="side-title">我的徽章</h3>
+    <div class="badge-row locked" id="badge-1">📖 口诀小达人 · 待解锁</div>
+    <div class="badge-row locked" id="badge-2">🔍 场景侦探 · 待解锁</div>
+    <div class="badge-row locked" id="badge-3">🧮 两步高手 · 待解锁</div>
+    <div class="review-mini" id="review-mini">📕 错题库空空的，继续保持！</div>
+    <div class="parent-tip">
+      <b>家长小贴士</b><br>
+      每天 10 分钟：先想清已知与所求，再抽卡。<br>
+      答错扣 2 ☀️，一次答对才有连对加成；别让孩子靠固定词猜运算。
+    </div>
+    <div class="goal">攒够阳光才能进下一关 ☀️</div>
+    <button class="reset-link" data-action="reset-ask">🔄 重新开始 · 清空本浏览器进度</button>
+  </aside>
+</main>
+
+<footer class="cheatsheet">
+  <span class="cheat-title">已知 / 求什么<br>→ 运算</span>
+  <span class="cheat-item c-add">两堆各多少都给了，求合起来 → ＋</span>
+  <span class="cheat-item c-sub">总数与一部分已知，求另一部分 → －</span>
+  <span class="cheat-item c-mul">每份一样多，知每份个数与份数 → ×</span>
+  <span class="cheat-item c-div">总数已知，按份数或每份个数去分 → ÷</span>
+</footer>
+
+<div class="reset-mask hidden" id="reset-modal" role="dialog" aria-modal="true" aria-labelledby="reset-title">
+  <div class="reset-dialog">
+    <h2 id="reset-title">🔄 重新开始？</h2>
+    <p>会让这个浏览器回到「第 1 关 · 0 ☀️」，像第一次打开一样重新参与。</p>
+    <ul>
+      <li>阳光、关卡、连对、答题与答对次数、徽章</li>
+      <li>错题库和全部间隔复习安排</li>
+      <li>卡池选择（恢复为全部题型 + 全部场景）</li>
+    </ul>
+    <p>音效开关会保留；其他设备、其他网址的记录不受影响。</p>
+    <p class="reset-warn">⚠️ 清空后不能撤销，建议由家长确认后再点。</p>
+    <div class="reset-actions">
+      <button class="reset-cancel" data-action="reset-cancel">再想想</button>
+      <button class="reset-confirm" data-action="reset-confirm">确认重新开始</button>
+    </div>
+  </div>
+</div>
+
+<script src="questions.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

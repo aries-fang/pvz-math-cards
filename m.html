@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3F7D2F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>数学抽卡训练营 · 手机版</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mobile.css">
+</head>
+<body>
+<div id="app">
+
+  <header class="top">
+    <div class="top-left">
+      <svg class="sun-icon" viewBox="0 0 52 52" aria-hidden="true">
+        <g fill="#FFD84D">
+          <ellipse cx="26" cy="9" rx="5.5" ry="10"/><ellipse cx="26" cy="43" rx="5.5" ry="10"/>
+          <ellipse cx="9" cy="26" rx="10" ry="5.5"/><ellipse cx="43" cy="26" rx="10" ry="5.5"/>
+          <ellipse cx="14" cy="14" rx="5.5" ry="9" transform="rotate(-45 14 14)"/>
+          <ellipse cx="38" cy="38" rx="5.5" ry="9" transform="rotate(-45 38 38)"/>
+          <ellipse cx="38" cy="14" rx="5.5" ry="9" transform="rotate(45 38 14)"/>
+          <ellipse cx="14" cy="38" rx="5.5" ry="9" transform="rotate(45 14 38)"/>
+        </g>
+        <circle cx="26" cy="26" r="12" fill="#8C5A1B"/><circle cx="26" cy="26" r="9" fill="#A8702A"/>
+        <circle cx="22" cy="23" r="2" fill="#3F2A12"/><circle cx="30" cy="23" r="2" fill="#3F2A12"/>
+        <path d="M22 31 Q26 35 30 31" stroke="#3F2A12" stroke-width="2" stroke-linecap="round" fill="none"/>
+      </svg>
+      <div class="top-title"><b>数学抽卡营</b><small id="top-sub">第 1 / 10 关 · 阳光闯关</small></div>
+    </div>
+    <div class="top-chips">
+      <span class="chip">☀<b id="s-sun">0</b></span>
+      <span class="chip">🔥<b id="s-streak">0</b></span>
+      <button class="chip chip-btn" data-action="review" aria-label="打开错题库">📕<b id="s-review">0</b></button>
+    </div>
+  </header>
+
+  <main class="body" id="body">
+
+    <!-- 抽卡台 -->
+    <section class="view" id="v-home">
+      <div class="hero">
+        <img src="assets/plants.png" alt="草坪上的植物和僵尸插画">
+        <span class="hero-tag" id="home-level">🌿 卡池 600 张</span>
+      </div>
+      <div class="deck-mini" aria-hidden="true">
+        <i></i><i></i><i><b>？</b><small>数学卡</small></i>
+      </div>
+        <div class="pool-row" id="pool-row">
+          <label class="pool-field">运算
+            <select id="op-pool" aria-label="选择运算卡池">
+              <option value="all">全部题型</option>
+              <option value="single">单一运算</option>
+              <option value="add">加法专项</option>
+              <option value="sub">减法专项</option>
+              <option value="mul">乘法专项</option>
+              <option value="div">除法专项</option>
+              <option value="mix">两步混合</option>
+            </select>
+          </label>
+          <label class="pool-field">场景
+            <select id="theme-pool" aria-label="选择场景卡池">
+              <option value="all">全部场景</option>
+              <option value="lawn">草坪</option>
+              <option value="zombie">僵尸</option>
+              <option value="sun">阳光</option>
+              <option value="pool">泳池</option>
+              <option value="night">夜晚</option>
+              <option value="roof">屋顶</option>
+              <option value="tool">道具</option>
+              <option value="card">卡包</option>
+            </select>
+          </label>
+        </div>
+      <div class="home-tip hidden" id="home-tip"></div>
+      <button class="read-first" data-action="open-sheet" data-sheet="rules">
+        <span class="rf-icon">🧠</span>
+        <span class="rf-text"><b>抽卡前，先读一遍口诀</b><small>点开口诀记忆墙 · 读出声记得更牢</small></span>
+        <em>›</em>
+      </button>
+      <div class="progress-mini">
+        <div class="progress-line"><span id="progress-fill"></span></div>
+        <p id="progress-note">第 1 / 10 关 · 还差 12 ☀️ · 已答对 <b>0</b> 题</p>
+      </div>
+      <div class="badge-mini" id="badge-mini"></div>
+    </section>
+
+    <!-- 答题 -->
+    <section class="view hidden" id="v-quiz">
+      <div class="q-head"><span id="q-tag">🎴 新抽到</span><span id="q-diff">难度 ★☆☆</span></div>
+      <div class="q-art"><img id="q-img" src="assets/plants.png" alt="题目情境插画"></div>
+      <div class="q-scene" id="q-scene"></div>
+      <p class="q-text" id="q-text"></p>
+      <div class="q-key" id="q-key"></div>
+
+      <div id="q-single">
+        <div class="q-label">这道题该用哪种运算？</div>
+        <div class="op-grid" id="op-grid"></div>
+        <div class="ans-row">
+          <label>得数</label>
+          <input id="ans-main" type="number" inputmode="numeric" placeholder="?">
+          <span id="ans-unit">　</span>
+        </div>
+      </div>
+
+      <div id="q-mix" class="hidden">
+        <div class="step-bar">
+          <span id="step-bar-1" class="active">第 1 步</span>
+          <span id="step-bar-2">第 2 步</span>
+        </div>
+        <div class="step-carry hidden" id="step-carry"></div>
+        <div class="q-label" id="step-label"></div>
+        <div class="op-grid" id="op-grid-mix"></div>
+        <div class="ans-row">
+          <label>得数</label>
+          <input id="ans-mix" type="number" inputmode="numeric" placeholder="?">
+          <span>写在草稿纸上再填</span>
+        </div>
+        <div class="step-mnemonic locked" id="step-mnemonic">🔒 这一步的口诀，先自己想一想</div>
+      </div>
+
+      <button class="hint-toggle waiting" id="hint-toggle" data-action="hint" disabled>⏳ 先自己想一想 · 口诀提示 10 秒后出现</button>
+      <div class="hint-box hidden" id="hint-box"></div>
+      <button class="text-btn" data-action="add-wrong">📕 把这题加入错题库</button>
+    </section>
+
+    <!-- 错题库 -->
+    <section class="view hidden" id="v-review">
+      <div class="rv-stats" id="rv-stats"></div>
+      <div class="rv-filters" id="rv-filters"></div>
+      <div class="rv-list" id="rv-list"></div>
+      <button class="wide-btn" data-action="review-start">▶ 开始复习抽卡（只抽到期错题）</button>
+      <div class="rv-mech">
+        <b>⏰ 间隔复习怎么安排？</b>
+        <p>答错 → 10 分钟后本轮重练；之后每答对一次，间隔拉长一档：1 / 2 / 4 / 7 / 15 天。满级且连对 3 次标记「已掌握」。普通抽卡时到期错题会优先出现，但最多约三分之一。</p>
+      </div>
+      <button class="text-btn danger" data-action="clear-records">清空全部错题记录</button>
+    </section>
+
+  </main>
+
+  <div class="fb-layer hidden" id="fb-layer"><div class="fb-card" id="fb-card"></div></div>
+
+  <nav class="bottom">
+    <button class="nav-btn" data-action="open-sheet" data-sheet="rules"><span>🧠</span><small>口诀</small></button>
+    <button class="nav-btn" data-action="open-sheet" data-sheet="cheat"><span>🔎</span><small>速查</small></button>
+    <button class="main-btn" id="main-btn" data-action="main">🎴 抽一张卡！</button>
+  </nav>
+
+  <div class="sheet-mask hidden" id="sheet-mask"></div>
+  <section class="sheet hidden" id="sheet" aria-label="口诀与更多">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head"><b id="sheet-title">口诀记忆墙</b><button data-action="close-sheet" aria-label="关闭">✕</button></div>
+    <div class="sheet-tabs" id="sheet-tabs">
+      <button data-action="sheet-tab" data-tab="rules" class="active">口诀墙</button>
+      <button data-action="sheet-tab" data-tab="cheat">判断速查</button>
+      <button data-action="sheet-tab" data-tab="more">进度 / 更多</button>
+    </div>
+    <div class="sheet-body" id="sheet-body"></div>
+  </section>
+
+  <div class="reset-mask hidden" id="reset-modal" role="dialog" aria-modal="true" aria-labelledby="reset-title">
+    <div class="reset-dialog">
+      <h2 id="reset-title">🔄 重新开始？</h2>
+      <p>会让这个浏览器回到「第 1 关 · 0 ☀️」，像第一次打开一样重新参与。</p>
+      <ul>
+        <li>阳光、关卡、连对、答题与答对次数、徽章</li>
+        <li>错题库和全部间隔复习安排</li>
+        <li>卡池选择（恢复为全部题型 + 全部场景）</li>
+      </ul>
+      <p>音效开关会保留；其他设备、其他网址的记录不受影响。</p>
+      <p class="reset-warn">⚠️ 清空后不能撤销，建议由家长确认后再点。</p>
+      <div class="reset-actions">
+        <button class="reset-cancel" data-action="reset-cancel">再想想</button>
+        <button class="reset-confirm" data-action="reset-confirm">确认重新开始</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="questions.js"></script>
+<script src="mobile.js"></script>
+</body>
+</html>
